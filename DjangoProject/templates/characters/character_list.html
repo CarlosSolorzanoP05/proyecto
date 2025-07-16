@@ -1,0 +1,103 @@
+{# C:\DjangoProject\characters\templates\characters\character_list.html #}
+
+{% extends 'base.html' %}
+
+{% block title %}Mis Personajes{% endblock %}
+
+{% block content %}
+    <h1>Mis Personajes</h1>
+
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'characters:warrior_create' %}" class="btn btn-primary">Crear Nuevo Guerrero</a>
+        <a href="{% url 'characters:mage_create' %}" class="btn btn-primary" style="margin-left: 10px;">Crear Nuevo Mago</a>
+    </div>
+
+    {# Botones de Importar/Exportar para Guerreros y Magos (solo para admins) #}
+    {% if user.is_staff %}
+        <h2 style="margin-top: 30px;">Herramientas de Datos (Admin)</h2>
+        <div style="margin-bottom: 20px;">
+            <h3>Guerreros:</h3>
+            <a href="{% url 'characters:warrior_export' %}" class="btn btn-success">
+                <i class="fas fa-download"></i> Exportar Guerreros (JSON)
+            </a>
+            <a href="{% url 'characters:warrior_import' %}" class="btn btn-info" style="margin-left: 10px;">
+                <i class="fas fa-upload"></i> Importar Guerreros (JSON)
+            </a>
+            <h3 style="margin-top: 20px;">Magos:</h3>
+            <a href="{% url 'characters:mage_export' %}" class="btn btn-success">
+                <i class="fas fa-download"></i> Exportar Magos (JSON)
+            </a>
+            <a href="{% url 'characters:mage_import' %}" class="btn btn-info" style="margin-left: 10px;">
+                <i class="fas fa-upload"></i> Importar Magos (JSON)
+            </a>
+        </div>
+    {% endif %}
+
+
+    <h2>Guerreros</h2>
+    {% if warriors %}
+        <table class="table" style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Vida</th>
+                    <th>Daño</th>
+                    <th>Defensa</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for warrior in warriors %}
+                    <tr>
+                        <td>{{ warrior.name }}</td>
+                        <td>{{ warrior.health }}</td>
+                        <td>{{ warrior.damage }}</td>
+                        <td>{{ warrior.defense }}</td>
+                        <td>
+                            <a href="{% url 'characters:warrior_update' warrior.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'characters:warrior_delete' warrior.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No tienes guerreros creados todavía.</p>
+    {% endif %}
+
+    <h2>Magos</h2>
+    {% if mages %}
+        <table class="table" style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Vida</th>
+                    <th>Daño Mágico</th>
+                    <th>Maná</th>
+                    <th>Defensa</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mage in mages %}
+                    <tr>
+                        <td>{{ mage.name }}</td>
+                        <td>{{ mage.health }}</td>
+                        <td>{{ mage.magic_damage }}</td>
+                        <td>{{ mage.mana }}</td>
+                        <td>{{ mage.defense }}</td>
+                        <td>
+                            <a href="{% url 'characters:mage_update' mage.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'characters:mage_delete' mage.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No tienes magos creados todavía.</p>
+    {% endif %}
+
+    <hr>
+    <p><a href="{% url 'home' %}">Volver al Inicio</a></p>
+{% endblock %}

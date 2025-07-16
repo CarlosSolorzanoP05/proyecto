@@ -1,0 +1,40 @@
+{# C:\DjangoProject\characters\templates\characters\generic_import.html #}
+
+{% extends 'base.html' %}
+
+{% block title %}Importar Datos{% endblock %}
+
+{% block content %}
+    <h1>Importar Datos</h1>
+
+    {% if message %}
+        <p style="color: green; font-weight: bold;">{{ message }}</p>
+    {% endif %}
+
+    {% if error_message %}
+        <p style="color: red; font-weight: bold;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if errors %}
+        <h3 style="color: red;">Errores durante la importación:</h3>
+        <ul>
+            {% for error in errors %}
+                <li style="color: red;">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p>Sube un archivo JSON para importar o actualizar los datos. El archivo debe contener una lista de objetos JSON.</p>
+    <p>Para crear nuevos elementos, puedes dejar el campo 'id' vacío o no incluirlo en el JSON.</p>
+
+    <form method="post" enctype="multipart/form-data"> {# No especificamos action si queremos que se envíe a la misma URL #}
+        {% csrf_token %}
+        <label for="json_file">Seleccionar archivo JSON:</label><br>
+        <input type="file" name="json_file" id="json_file" accept=".json"><br><br>
+        <button type="submit" class="btn btn-primary">Subir y Importar</button>
+    </form>
+
+    <p style="margin-top: 20px;">
+        <a href="javascript:history.back()" class="btn">Volver a la Lista</a> {# Vuelve a la página anterior #}
+    </p>
+{% endblock %}

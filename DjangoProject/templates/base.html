@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My RPG Project{% endblock %}</title>
+    <style>
+        /* Estilos básicos para que se vea un poco mejor */
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .navbar { background-color: #333; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px;}
+
+        /* Estilos para los enlaces de la navbar como botones */
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+            padding: 8px 12px; /* Espaciado interno para el botón */
+            background-color: #007bff; /* Color de fondo del botón */
+            border-radius: 5px; /* Bordes redondeados */
+            transition: background-color 0.3s ease; /* Transición suave al pasar el ratón */
+            display: inline-block; /* Para que padding y margin funcionen bien */
+            white-space: nowrap; /* Evita que el texto del botón se rompa */
+        }
+        .navbar a:hover {
+            background-color: #0056b3; /* Color de fondo al pasar el ratón */
+            text-decoration: none; /* Asegura que no haya subrayado en hover */
+        }
+
+        .auth-info { display: flex; align-items: center; }
+        .auth-info span { margin-right: 10px; }
+        h1, h2 { color: #555; }
+        form { margin-top: 20px; }
+        form p { margin-bottom: 10px; }
+        form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="email"],
+        form input[type="number"],
+        form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        /* Estilo para el botón de submit, si es diferente del estilo de los enlaces */
+        form button[type="submit"],
+        .btn { /* Clase genérica para botones, usada también en tus plantillas de lista */
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none; /* Asegura que los enlaces con clase btn no se subrayen */
+            display: inline-block; /* Para padding y margin */
+        }
+        form button[type="submit"]:hover,
+        .btn:hover { background-color: #0056b3; }
+
+        .errorlist { color: red; list-style-type: none; padding: 0; margin: 0; }
+        .messages { list-style-type: none; padding: 0; margin: 10px 0; }
+        .messages li { padding: 10px; margin-bottom: 5px; border-radius: 4px; }
+        .messages .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .messages .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+     <div class="navbar">
+        <div>
+            <a href="{% url 'home' %}">Inicio</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'characters:character_list' %}">Mis Personajes</a>
+                <a href="{% url 'battle:battle_home' %}">Batalla</a>
+
+                {% if user %}
+                    <a href="{% url 'characters:enemy_list' %}">Enemigos</a>
+                    <a href="{% url 'characters:item_list' %}">Ítems </a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="auth-info">
+            {% if user.is_authenticated %}
+                <span>Hola, {{ user.username }}{% if user.is_staff %} (Admin){% endif %}</span> {# ¡CAMBIADO AQUÍ! user.is_admin a user.is_staff #}
+                {# Formulario para Cerrar Sesión de forma segura (POST) #}
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background:none; border:none; color:white; cursor:pointer; font:inherit; text-decoration:underline;">Cerrar Sesión</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Iniciar Sesión</a>
+                <a href="{% url 'users:register' %}">Registrarse</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

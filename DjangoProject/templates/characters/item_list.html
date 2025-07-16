@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Ítems{% endblock %}
+
+{% block content %}
+    <h1>Ítems disponibles</h1>
+
+    {# Botones de Importar/Exportar (solo para admins) #}
+    {# Estos botones aparecerán si el usuario logueado tiene el estado de 'staff' (administrador) #}
+    {% if user.is_staff %}
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'characters:item_export' %}" class="btn btn-success">
+                <i class="fas fa-download"></i> Exportar Ítems (JSON)
+            </a>
+            <a href="{% url 'characters:item_import' %}" class="btn btn-info" style="margin-left: 10px;">
+                <i class="fas fa-upload"></i> Importar Ítems (JSON)
+            </a>
+        </div>
+    {% endif %}
+
+    <p><a href="{% url 'characters:item_create' %}" class="btn btn-primary">Crear Nuevo Ítem</a></p>
+
+    {% if items %} {# 'items' es el nombre del contexto que pasa ItemListView #}
+        <table border="1" style="width:100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr style="background-color: #eee;">
+                    <th style="padding: 8px; text-align: left;">Nombre</th>
+                    <th style="padding: 8px; text-align: left;">Tipo</th> {# Nuevo encabezado para el tipo de ítem #}
+                    <th style="padding: 8px; text-align: left;">Detalles / Efecto</th> {# Encabezado genérico para la columna de detalles #}
+                    <th style="padding: 8px; text-align: left;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td style="padding: 8px;">{{ item.name }}</td>
+                    <td style="padding: 8px;">{{ item.get_item_type_display }}</td> {# Muestra el nombre legible del tipo #}
+                    <td style="padding: 8px;">
+                        {% if item.item_type == 'SWORD' or item.item_type == 'STAFF' %}
+                            Daño Adicional: {{ item.damage_buff }}
+                        {% elif item.item_type == 'HEALTH_POTION' %}
+                            Restaura Vida: {{ item.health_restore }}
+                        {% elif item.item_type == 'MANA_POTION' %}
+                            Restaura Maná: {{ item.mana_restore }}
+                        {% else %}
+                            {{ item.description|default:"N/A" }} {# Fallback a descripción si no hay tipo específico #}
+                        {% endif %}
+                    </td>
+                    <td style="padding: 8px;">
+                        <a href="{% url 'characters:item_update' item.pk %}">Editar</a> |
+                        <a href="{% url 'characters:item_delete' item.pk %}">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay ítems creados todavía.</p>
+    {% endif %}
+
+    <hr>
+    <p><a href="{% url 'home' %}">Volver al Inicio</a></p>
+{% endblock %}

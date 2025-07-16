@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear/Editar items{% endblock %}
+
+{% block content %}
+    <h1>{% if form.instance.pk %}Editar{% else %}Crear{% endif %} items</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }} {# Esto renderiza todos los campos del formulario como párrafos #}
+        <button type="submit">Guardar items</button>
+    </form>
+    <p><a href="{% url 'characters:enemy_list' %}">Volver a la lista de items</a></p>
+{% endblock %}

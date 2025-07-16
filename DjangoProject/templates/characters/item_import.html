@@ -1,0 +1,40 @@
+{# C:\DjangoProject\characters\templates\characters\item_import.html #}
+
+{% extends 'base.html' %}
+
+{% block title %}Importar Ítems{% endblock %}
+
+{% block content %}
+    <h1>Importar Ítems</h1>
+
+    {% if message %}
+        <p style="color: green; font-weight: bold;">{{ message }}</p>
+    {% endif %}
+
+    {% if error_message %}
+        <p style="color: red; font-weight: bold;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if errors %}
+        <h3 style="color: red;">Errores durante la importación:</h3>
+        <ul>
+            {% for error in errors %}
+                <li style="color: red;">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p>Sube un archivo CSV para importar o actualizar ítems. La cabecera del CSV debe ser:</p>
+    <p><code>ID,Name,Item Type,Description,Value,Damage Buff,Health Restore,Mana Restore,Extra Attributes</code></p>
+    <p>Para nuevos ítems, deja la columna ID vacía.</p>
+
+    <form method="post" enctype="multipart/form-data" action="{% url 'characters:item_import' %}">
+        {% csrf_token %}
+        <label for="csv_file">Seleccionar archivo CSV:</label><br>
+        <input type="file" name="csv_file" id="csv_file" accept=".csv"><br><br>
+        <button type="submit" class="btn btn-primary">Subir y Importar</button>
+    </form>
+
+    {# Change 'item_add' to 'item_create' here: #}
+    <p style="margin-top: 20px;"><a href="{% url 'characters:item_list' %}" class="btn">Volver a la Lista de Ítems</a></p>
+{% endblock %}

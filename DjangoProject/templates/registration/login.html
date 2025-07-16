@@ -1,0 +1,14 @@
+{# C:\DjangoProject\DjangoProject\templates\users\login.html #}
+{% extends 'base.html' %} {# ¡CAMBIO CRÍTICO AQUÍ! Ya no '../base.html' #}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+    <h2>Iniciar Sesión</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+    <p>¿No tienes cuenta? <a href="{% url 'users:register' %}">Regístrate aquí</a></p> {# Asegúrate de que 'users:register' esté bien configurado en tus urls.py #}
+{% endblock %}

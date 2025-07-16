@@ -1,0 +1,56 @@
+{# C:\DjangoProject\characters\templates\characters\enemy_list.html #}
+
+{% extends 'base.html' %}
+
+{% block title %}Lista de Enemigos{% endblock %}
+
+{% block content %}
+    <h1>Lista de Enemigos</h1>
+
+    {# Botones de Importar/Exportar para Enemigos (solo para admins) #}
+    {% if user.is_staff %}
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'characters:enemy_export' %}" class="btn btn-success">
+                <i class="fas fa-download"></i> Exportar Enemigos (JSON)
+            </a>
+            <a href="{% url 'characters:enemy_import' %}" class="btn btn-info" style="margin-left: 10px;">
+                <i class="fas fa-upload"></i> Importar Enemigos (JSON)
+            </a>
+        </div>
+    {% endif %}
+
+    <p><a href="{% url 'characters:enemy_create' %}" class="btn btn-primary">Crear Nuevo Enemigo</a></p>
+
+    {% if enemies %}
+        <table class="table" style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Vida</th>
+                    <th>Ataque</th>
+                    <th>Defensa</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for enemy in enemies %}
+                    <tr>
+                        <td>{{ enemy.name }}</td>
+                        <td>{{ enemy.health }}</td>
+                        <td>{{ enemy.attack }}</td>
+                        <td>{{ enemy.defense }}</td>
+                        <td>
+                            <a href="{% url 'characters:enemy_update' enemy.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'characters:enemy_delete' enemy.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay enemigos disponibles.</p>
+    {% endif %}
+
+    <hr>
+    <p><a href="{% url 'home' %}">Volver al Inicio</a></p>
+{% endblock %}

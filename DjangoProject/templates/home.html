@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Página de Inicio{% endblock %}
+
+{% block content %}
+    <h1>Bienvenido a My RPG Project, {{ user.username }}!</h1>
+    <p>Desde aquí podrás gestionar tus personajes o iniciar una batalla.</p>
+
+    {% if user.is_authenticated %}
+        <div>
+            <h2>Opciones:</h2>
+            <p><a href="{% url 'characters:character_list' %}">Crear Personajes</a></p> {# Enlace corregido #}
+            <p><a href="{% url 'battle:battle_home' %}">Batalla</a></p> {# Enlace corregido #}
+
+            {% if user.is_admin %}
+                <p>Como **administrador**, también puedes:</p>
+                <ul>
+                    <li><a href="{% url 'admin:index' %}">Acceder al Panel de Administración</a></li>
+                    <li>Ver opciones de exportación JSON (disponible en la sección de personajes)</li>
+                </ul>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Por favor, <a href="{% url 'login' %}">inicia sesión</a> o <a href="{% url 'users:register' %}">regístrate</a> para comenzar.</p>
+    {% endif %}
+{% endblock %}
